@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Mahek! 🎂</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .balloons {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .balloon {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            animation: float linear infinite;
+        }
+
+        .balloon-red {
+            background: #ff6b6b;
+            left: 10%;
+            animation-duration: 8s;
+            animation-delay: 0s;
+        }
+
+        .balloon-blue {
+            background: #4ecdc4;
+            left: 20%;
+            animation-duration: 10s;
+            animation-delay: 1s;
+        }
+
+        .balloon-yellow {
+            background: #ffe66d;
+            left: 30%;
+            animation-duration: 9s;
+            animation-delay: 2s;
+        }
+
+        .balloon-pink {
+            background: #ff85c0;
+            left: 40%;
+            animation-duration: 11s;
+            animation-delay: 0.5s;
+        }
+
+        .balloon-green {
+            background: #95e1d3;
+            left: 50%;
+            animation-duration: 12s;
+            animation-delay: 1.5s;
+        }
+
+        .balloon-purple {
+            background: #c7b3e5;
+            left: 60%;
+            animation-duration: 9.5s;
+            animation-delay: 0.8s;
+        }
+
+        .balloon-orange {
+            background: #ffa500;
+            left: 70%;
+            animation-duration: 10.5s;
+            animation-delay: 2.2s;
+        }
+
+        .balloon-cyan {
+            background: #00d4ff;
+            left: 80%;
+            animation-duration: 11.5s;
+            animation-delay: 1.2s;
+        }
+
+        @keyframes float {
+            0% {
+                bottom: -50px;
+                opacity: 1;
+            }
+            100% {
+                bottom: 100vh;
+                opacity: 0;
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            animation: bounce 1s ease-in-out;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .subtitle {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .emoji-celebration {
+            font-size: 3em;
+            margin: 20px 0;
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            font-size: 1.1em;
+            line-height: 1.8;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .section {
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .wishes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .wish-card {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            font-size: 0.95em;
+            transition: transform 0.3s ease;
+        }
+
+        .wish-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .wish-emoji {
+            font-size: 1.5em;
+            margin-right: 8px;
+        }
+
+        .distance-note {
+            background: #ffe66d;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #333;
+            font-style: italic;
+            border: 2px dashed #f093fb;
+        }
+
+        .distance-note em {
+            color: #764ba2;
+            font-weight: bold;
+        }
+
+        .memory-section {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+        }
+
+        .memory-section p {
+            color: #333;
+            line-height: 1.8;
+            margin: 10px 0;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: #764ba2;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .gift-box {
+            font-size: 2em;
+            margin: 15px 0;
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .subtitle {
+                font-size: 1.2em;
+            }
+
+            .wishes {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="balloons">
+        <div class="balloon balloon-red"></div>
+        <div class="balloon balloon-blue"></div>
+        <div class="balloon balloon-yellow"></div>
+        <div class="balloon balloon-pink"></div>
+        <div class="balloon balloon-green"></div>
+        <div class="balloon balloon-purple"></div>
+        <div class="balloon balloon-orange"></div>
+        <div class="balloon balloon-cyan"></div>
+    </div>
+
+    <div class="container">
+        <h1>🎉 Happy Birthday Mahek! 🎉</h1>
+        <div class="subtitle">Celebrating You Across the Distance ✨</div>
+        
+        <div class="emoji-celebration">🎂</div>
+
+        <div class="message">
+            Dear Mahek,<br><br>
+            Even though I'm in India and you're in Canada, the distance between us can never diminish the love and joy I feel for you on your special day. Today, I celebrate YOU – your amazing spirit, your infectious laugh, and the beautiful soul you are.
+        </div>
+
+        <div class="distance-note">
+            🌍 Miles apart, but <em>hearts together</em>. This birthday wish travels across continents to reach you with all my love! 💕
+        </div>
+
+        <div class="section">
+            <h2>🌟 My Birthday Wishes for You</h2>
+            <div class="wishes">
+                <div class="wish-card">
+                    <span class="wish-emoji">✨</span> May this year bring you endless happiness and unforgettable moments
+                </div>
+                <div class="wish-card">
+                    <span class="wish-emoji">🌈</span> May you achieve all your dreams and aspirations
+                </div>
+                <div class="wish-card">
+                    <span class="wish-emoji">💪</span> May you be strong, brave, and unstoppable in all you do
+                </div>
+                <div class="wish-card">
+                    <span class="wish-emoji">💖</span> May you be surrounded by love and good people always
+                </div>
+                <div class="wish-card">
+                    <span class="wish-emoji">🌻</span> May you bloom and grow into your best self
+                </div>
+                <div class="wish-card">
+                    <span class="wish-emoji">🌟</span> May this year be better than all the ones before
+                </div>
+            </div>
+        </div>
+
+        <div class="memory-section">
+            <h2 style="text-align: center; color: #667eea; margin-top: 0;">💝 A Note From Your Heart</h2>
+            <p>
+                Mahek, I know you were hoping I could be there in person for your birthday, and my heart aches knowing that I can't be by your side right now. But please know that even across the vast ocean, my love for you is as strong as ever.
+            </p>
+            <p>
+                Every moment we've shared, every laugh we've had, every time you've been there for me – all of it lives in my heart. This distance is temporary, but our bond is forever.
+            </p>
+            <p>
+                On your birthday, I want you to know how incredibly proud I am of you. You've shown such strength and grace, and I admire you more with each passing day. You deserve all the happiness in the world.
+            </p>
+            <p style="text-align: center; margin-top: 15px;">
+                <strong>Celebrating you today and every day! 🎂💕</strong>
+            </p>
+        </div>
+
+        <div class="gift-box">🎁🎀🎁</div>
+
+        <div class="section">
+            <h2>🌸 Some Fun Birthday Facts</h2>
+            <div style="background: #f8f9ff; padding: 15px; border-radius: 10px; text-align: center; color: #333;">
+                <p>🎂 Today marks another year of being amazing!</p>
+                <p>💬 You are one of a kind and absolutely irreplaceable</p>
+                <p>🌟 Your existence makes the world a better place</p>
+                <p>🎉 Every single day should celebrate you!</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>All my love sent across the miles 🌍💕</p>
+            <p style="margin-top: 10px;">Your Sister,<br><strong>From India to Canada with All My Heart ❤️</strong></p>
+        </div>
+    </div>
+
+    <script>
+        // Confetti effect on page load
+        function createConfetti() {
+            const confettiPieces = 50;
+            for (let i = 0; i < confettiPieces; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.background = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#ff85c0', '#95e1d3'][Math.floor(Math.random() * 5)];
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '-10px';
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.pointerEvents = 'none';
+                    confetti.style.animation = `confettiFall ${2 + Math.random() * 2}s ease-in forwards`;
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 30);
+            }
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes confettiFall {
+                to {
+                    transform: translateY(${window.innerHeight}px) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        window.addEventListener('load', () => {
+            createConfetti();
+            // Create confetti every 3 seconds
+            setInterval(createConfetti, 3000);
+        });
+    </script>
+</body>
+</html>
