@@ -223,33 +223,53 @@
   }
   .wish-row p{ font-size: 0.98em; }
 
-  /* ---------- GALLERY ---------- */
+  /* ---------- GALLERY (scrapbook masonry) ---------- */
   .gallery-grid{
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 18px;
+    column-count: 4;
+    column-gap: 22px;
     max-width: 1180px;
     margin: 0 auto;
   }
+  @media (max-width: 1000px){ .gallery-grid{ column-count: 3; } }
+  @media (max-width: 680px){ .gallery-grid{ column-count: 2; column-gap: 14px; } }
+
   .gallery-item{
     position:relative;
-    aspect-ratio: 4/5;
+    break-inside: avoid;
+    margin-bottom: 22px;
     overflow:hidden;
     border-radius: 4px;
     background: #e7ddd0;
-    border: 1px solid var(--paper-line);
+    border: 6px solid var(--ivory);
+    box-shadow: 0 6px 18px rgba(46,35,64,0.12);
     cursor:pointer;
+    opacity:0;
+    transform: translateY(28px) rotate(var(--tilt, 0deg));
+    transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.35s ease, border-color 0.35s ease;
   }
+  .gallery-item.in-view{ opacity:1; transform: translateY(0) rotate(var(--tilt, 0deg)); }
+  .gallery-item:hover{
+    transform: translateY(-6px) rotate(0deg) scale(1.03);
+    box-shadow: 0 18px 34px rgba(46,35,64,0.22);
+    border-color: var(--gold);
+    z-index: 2;
+  }
+  .gallery-item:nth-child(3n+1){ --tilt: -1.6deg; }
+  .gallery-item:nth-child(3n+2){ --tilt: 1.4deg; }
+  .gallery-item:nth-child(3n){ --tilt: -0.6deg; }
+
   .gallery-item img{
-    width:100%; height:100%; object-fit:cover;
+    display:block;
+    width:100%; height:auto;
     filter: saturate(0.92) contrast(1.02);
     transition: transform 0.6s ease, filter 0.6s ease;
+    pointer-events:none;
   }
   .gallery-item:hover img{ transform: scale(1.045); filter: saturate(1) contrast(1.02); }
   .gallery-item img.img-missing{ display:none; }
   .gallery-item .img-fallback{
     display:none;
-    width:100%; height:100%;
+    width:100%; aspect-ratio: 4/5;
     align-items:center; justify-content:center;
     flex-direction:column; gap:8px;
     color: var(--rose);
@@ -260,13 +280,20 @@
   .gallery-item .img-fallback i{ font-size:1.4em; }
   .gallery-overlay{
     position:absolute; inset:0;
-    background: linear-gradient(180deg, transparent 55%, rgba(46,35,64,0.55));
+    background: linear-gradient(180deg, transparent 55%, rgba(46,35,64,0.6));
     opacity:0; transition: opacity 0.35s ease;
-    display:flex; align-items:flex-end; justify-content:flex-start;
-    padding:14px;
+    display:flex; align-items:flex-end; justify-content:space-between;
+    padding:12px 14px;
+    pointer-events:none;
   }
   .gallery-item:hover .gallery-overlay{ opacity:1; }
-  .gallery-overlay i{ color: var(--ivory); font-size:1.1em; }
+  .gallery-overlay i{ color: var(--ivory); font-size:1em; }
+  .gallery-overlay .frame-num{
+    color: rgba(250,246,241,0.85);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.95em;
+  }
 
   /* ---------- MODAL ---------- */
   .modal{
@@ -319,20 +346,29 @@
     text-align:right;
   }
 
-  /* ---------- FACTS / CARDS ---------- */
-  .facts-grid{
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
-    gap: 1px;
+  /* ---------- TRUTHS (masonry, progressively loaded) ---------- */
+  .truths-grid{
+    column-count: 3;
+    column-gap: 22px;
     max-width: 1100px;
     margin: 0 auto;
-    background: var(--paper-line);
-    border: 1px solid var(--paper-line);
   }
+  @media (max-width: 900px){ .truths-grid{ column-count: 2; } }
+  @media (max-width: 600px){ .truths-grid{ column-count: 1; } }
+
   .fact{
+    break-inside: avoid;
     background: var(--ivory);
-    padding: 40px 30px;
+    border: 1px solid var(--paper-line);
+    border-radius: 6px;
+    padding: 34px 28px;
+    margin-bottom: 22px;
+    opacity:0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
+  .fact.in-view{ opacity:1; transform: translateY(0); }
+  .fact:hover{ border-color: var(--gold); box-shadow: 0 12px 28px rgba(46,35,64,0.08); }
   .fact .label{ display:block; margin-bottom:16px; }
   .fact h3{
     font-family: var(--serif);
@@ -342,6 +378,20 @@
     margin-bottom: 10px;
   }
   .fact p{ font-size: 0.96em; }
+
+  .truths-sentinel{ height: 4px; }
+  .truths-close{
+    break-inside: avoid;
+    text-align:center;
+    padding: 30px 10px 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.15em;
+    color: var(--rose);
+    opacity:0;
+    transition: opacity 0.8s ease;
+  }
+  .truths-close.in-view{ opacity:1; }
 
   /* ---------- TIMELINE (milestones either side of a center line) ---------- */
   .timeline{
@@ -499,57 +549,39 @@
   footer p{ font-size:0.88em; margin-top:6px; letter-spacing:0.02em; }
   footer p.main{ color: rgba(250,246,241,0.85); font-family: var(--serif); font-style:italic; font-size:1.05em; }
 
-  /* ---------- MUSIC TOGGLE ---------- */
-  .music-toggle{
+  /* ---------- AMBIENT MUSIC CUE ---------- */
+  .music-cue{
     position: fixed;
     right: 22px;
     bottom: 22px;
     z-index: 200;
     display:flex;
     align-items:center;
-    gap:10px;
-    padding: 12px 18px;
+    gap:8px;
+    padding: 10px 16px;
     background: var(--ink);
     color: var(--ivory);
-    border: none;
     border-radius: 999px;
-    cursor:pointer;
     font-family: var(--sans);
-    font-size: 0.8em;
-    letter-spacing: 0.04em;
-    box-shadow: 0 10px 26px rgba(46,35,64,0.28);
-    transition: transform 0.3s ease, background 0.3s ease;
+    font-size: 0.76em;
+    letter-spacing: 0.03em;
+    box-shadow: 0 10px 26px rgba(46,35,64,0.25);
+    opacity:0;
+    pointer-events:none;
+    transform: translateY(8px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
   }
-  .music-toggle:hover{ transform: translateY(-3px); }
-  .music-toggle .bars{ display:flex; align-items:flex-end; gap:2px; height:12px; }
-  .music-toggle .bars span{
+  .music-cue.show{ opacity:1; transform: translateY(0); }
+  .music-cue .bars{ display:flex; align-items:flex-end; gap:2px; height:12px; }
+  .music-cue .bars span{
     width:3px; background: var(--gold); border-radius:2px;
     animation: barBounce 0.9s ease-in-out infinite;
-    height: 4px;
   }
-  .music-toggle .bars span:nth-child(2){ animation-delay:0.15s; }
-  .music-toggle .bars span:nth-child(3){ animation-delay:0.3s; }
-  .music-toggle.playing .bars span{ animation-play-state: running; }
-  .music-toggle:not(.playing) .bars span{ animation-play-state: paused; height:4px; }
+  .music-cue .bars span:nth-child(2){ animation-delay:0.15s; }
+  .music-cue .bars span:nth-child(3){ animation-delay:0.3s; }
   @keyframes barBounce{
     0%,100%{ height:4px; } 50%{ height:12px; }
   }
-  .music-note{
-    position: fixed;
-    right: 22px;
-    bottom: 76px;
-    z-index: 200;
-    max-width: 230px;
-    background: var(--ivory);
-    border: 1px solid var(--paper-line);
-    padding: 12px 14px;
-    border-radius: 10px;
-    font-size: 0.78em;
-    color: var(--ink-soft);
-    box-shadow: 0 10px 26px rgba(46,35,64,0.15);
-    display:none;
-  }
-  .music-note.show{ display:block; }
 
   @media (max-width:640px){
     .letter{ padding: 44px 26px; }
@@ -618,7 +650,7 @@
     <span class="label">In frames</span>
     <h2>Our Memories Together</h2>
   </div>
-  <div class="gallery-grid reveal" id="galleryGrid"></div>
+  <div class="gallery-grid" id="galleryGrid"></div>
 </section>
 
 <div id="photoModal" class="modal">
@@ -647,15 +679,11 @@
   <div class="section-head reveal">
     <span class="label">A few truths</span>
     <h2>About You</h2>
+    <p>Keep scrolling — there's more where that came from.</p>
   </div>
-  <div class="facts-grid reveal">
-    <div class="fact"><span class="label">One</span><h3>Irreplaceable</h3><p>Another year, and still absolutely one of a kind.</p></div>
-    <div class="fact"><span class="label">Two</span><h3>Simply you</h3><p>There's no one else quite like you, and you never have to be.</p></div>
-    <div class="fact"><span class="label">Three</span><h3>A brighter world</h3><p>Wherever you are, you make the room warmer.</p></div>
-    <div class="fact"><span class="label">Four</span><h3>Worth celebrating</h3><p>Not just today — every day you show up as yourself.</p></div>
-    <div class="fact"><span class="label">Five</span><h3>Quietly strong</h3><p>Inspiring in ways you probably don't even notice.</p></div>
-    <div class="fact"><span class="label">Six</span><h3>Never far</h3><p>India or Canada — we're always on the same thread.</p></div>
-  </div>
+  <div class="truths-grid" id="truthsGrid"></div>
+  <div class="truths-sentinel" id="truthsSentinel"></div>
+  <div class="truths-close" id="truthsClose">...and that's not even all of it. Happy birthday, your highness. 👑</div>
 </section>
 
 <!-- MAKE A WISH (interactive) -->
@@ -778,12 +806,9 @@
 <audio id="bdayMusic" loop preload="none">
   <source src="birthday-music.mp3" type="audio/mpeg">
 </audio>
-<button class="music-toggle" id="musicToggle" aria-label="Play birthday music">
+<div class="music-cue" id="musicCue">
   <span class="bars"><span></span><span></span><span></span></span>
-  <span id="musicLabel">Play music</span>
-</button>
-<div class="music-note" id="musicNote">
-  Add a file named <strong>birthday-music.mp3</strong> to the repo (same folder as index.html) to enable this — any soft instrumental track works.
+  <span>playing softly</span>
 </div>
 
 <script>
@@ -812,14 +837,31 @@
     photos.forEach((photo, i) => {
       const item = document.createElement('div');
       item.className = 'gallery-item';
+      item.addEventListener('click', () => openModal(i));
       item.innerHTML = `
-        <img src="${photo}" alt="Memory ${i+1}" loading="lazy" onclick="openModal(${i})"
+        <img src="${photo}" alt="Memory ${i+1}" loading="lazy"
              onerror="this.classList.add('img-missing'); this.closest('.gallery-item').classList.add('is-missing');">
         <div class="img-fallback"><i class="fa-solid fa-image"></i><span>${photo}</span></div>
-        <div class="gallery-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
+        <div class="gallery-overlay">
+          <span class="frame-num">${String(i+1).padStart(2,'0')}</span>
+          <i class="fa-solid fa-magnifying-glass-plus"></i>
+        </div>
       `;
       grid.appendChild(item);
     });
+
+    // staggered cascade reveal as each photo scrolls into view
+    const galleryIO = new IntersectionObserver((entries) => {
+      entries.forEach((entry, order) => {
+        if (entry.isIntersecting){
+          const idx = Array.from(grid.children).indexOf(entry.target);
+          entry.target.style.transitionDelay = `${(idx % 8) * 70}ms`;
+          entry.target.classList.add('in-view');
+          galleryIO.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    grid.querySelectorAll('.gallery-item').forEach(el => galleryIO.observe(el));
   }
 
   function openModal(i){
@@ -870,9 +912,89 @@
   }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+  // ---------- TRUTHS (progressively loaded, princess-tier) ----------
+  const truths = [
+    { title:'Irreplaceable', text:'Another year, and still absolutely one of a kind.' },
+    { title:'Simply you', text:"There's no one else quite like you, and you never have to be." },
+    { title:'A brighter world', text:'Wherever you are, you make the room warmer.' },
+    { title:'Worth celebrating', text:'Not just today — every day you show up as yourself.' },
+    { title:'Quietly strong', text:"Inspiring in ways you probably don't even notice." },
+    { title:'Never far', text:"India or Canada — we're always on the same thread." },
+    { title:'Effortlessly regal', text:'You carry yourself like you already know exactly what you\'re worth.' },
+    { title:'The main character', text:'Every room is simply better with you in it.' },
+    { title:'Untouchable', text:"No one else's opinion has ever gotten to define you. That's rare." },
+    { title:'Naturally magnetic', text:'People are drawn to you before you even say a word.' },
+    { title:'Built different', text:'Stronger, softer, and wiser than you give yourself credit for.' },
+    { title:'A whole mood', text:'Elegant chaos, and we love her endlessly for it.' },
+    { title:'The blueprint', text:"Other people take notes off you, whether you notice or not." },
+    { title:'Undeniably iconic', text:"You don't chase trends — you quietly set the pace." },
+    { title:'Delicately fierce', text:'Soft heart, unshakeable spine. A rare combination.' },
+    { title:'Made for more', text:'This year is just the opening scene of what\'s coming.' },
+    { title:'A whole vibe', text:'You make ordinary days feel like something worth remembering.' },
+    { title:'Priceless', text:"Some things simply can't be replaced or compared. You're one of them." },
+    { title:'Ahead of your time', text:"You've always seen things before everyone else caught up." },
+    { title:'Certified royalty', text:"Crowned by your own standards, not anyone else's approval." },
+    { title:'Impossible to replicate', text:'They can copy the outfit. They will never copy the energy.' },
+    { title:'Star of your own story', text:'And every side character is lucky just to be in it.' },
+    { title:'The whole package', text:'Beauty, brains, heart — take your pick. You have all three.' },
+    { title:'Simply extraordinary', text:"Which, frankly, we've been saying since day one." }
+  ];
+  const TRUTHS_BATCH = 6;
+  let truthsShown = 0;
+  const truthsGrid = document.getElementById('truthsGrid');
+  const truthsSentinel = document.getElementById('truthsSentinel');
+  const truthsClose = document.getElementById('truthsClose');
+
+  const truthsCardIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        truthsCardIO.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  function loadMoreTruths(){
+    const next = truths.slice(truthsShown, truthsShown + TRUTHS_BATCH);
+    next.forEach((t, i) => {
+      const card = document.createElement('div');
+      card.className = 'fact';
+      card.style.transitionDelay = `${i * 70}ms`;
+      card.innerHTML = `
+        <span class="label">${String(truthsShown + i + 1).padStart(2,'0')}</span>
+        <h3>${t.title}</h3>
+        <p>${t.text}</p>
+      `;
+      truthsGrid.appendChild(card);
+      truthsCardIO.observe(card);
+    });
+    truthsShown += next.length;
+
+    if (truthsShown >= truths.length){
+      truthsSentinelIO.disconnect();
+      truthsCloseIO.observe(truthsClose);
+    }
+  }
+
+  const truthsSentinelIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && truthsShown < truths.length){
+        loadMoreTruths();
+      }
+    });
+  }, { threshold: 0, rootMargin: '0px 0px 200px 0px' });
+
+  const truthsCloseIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('in-view');
+    });
+  }, { threshold: 0.3 });
+
   window.addEventListener('load', () => {
     populateGallery();
     setTimeout(fallPetals, 400);
+    loadMoreTruths();
+    truthsSentinelIO.observe(truthsSentinel);
   });
 
   document.querySelectorAll('a[href^="#"]').forEach(a => {
@@ -883,31 +1005,46 @@
     });
   });
 
-  // ---------- MUSIC TOGGLE ----------
+  // ---------- MUSIC: starts softly once she scrolls into the memories section ----------
   const music = document.getElementById('bdayMusic');
-  const musicBtn = document.getElementById('musicToggle');
-  const musicLabel = document.getElementById('musicLabel');
-  const musicNote = document.getElementById('musicNote');
-  let musicMissingWarned = false;
+  const musicCue = document.getElementById('musicCue');
+  music.volume = 0.35;
+  let musicStarted = false;
 
-  musicBtn.addEventListener('click', () => {
-    if (music.paused){
-      music.play().then(() => {
-        musicBtn.classList.add('playing');
-        musicLabel.textContent = 'Pause music';
-        musicNote.classList.remove('show');
-      }).catch(() => {
-        if (!musicMissingWarned){
-          musicNote.classList.add('show');
-          musicMissingWarned = true;
-        }
-      });
-    } else {
-      music.pause();
-      musicBtn.classList.remove('playing');
-      musicLabel.textContent = 'Play music';
-    }
-  });
+  function tryStartMusic(){
+    if (musicStarted) return;
+    music.play().then(() => {
+      musicStarted = true;
+      musicCue.classList.add('show');
+      setTimeout(() => musicCue.classList.remove('show'), 4000);
+    }).catch(() => {
+      // autoplay blocked — retry on the next real interaction, silently
+      const retry = () => {
+        music.play().then(() => {
+          musicStarted = true;
+          musicCue.classList.add('show');
+          setTimeout(() => musicCue.classList.remove('show'), 4000);
+        }).catch(() => {});
+        window.removeEventListener('click', retry);
+        window.removeEventListener('touchstart', retry);
+        window.removeEventListener('keydown', retry);
+      };
+      window.addEventListener('click', retry, { once:true });
+      window.addEventListener('touchstart', retry, { once:true });
+      window.addEventListener('keydown', retry, { once:true });
+    });
+  }
+
+  const gallerySection = document.getElementById('galleryGrid').closest('section');
+  const musicIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        tryStartMusic();
+        musicIO.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  musicIO.observe(gallerySection);
 
   // ---------- MAKE A WISH ----------
   const candleStage = document.getElementById('candleStage');
