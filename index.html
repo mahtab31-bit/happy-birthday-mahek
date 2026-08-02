@@ -24,6 +24,52 @@
             color: #333;
         }
 
+        /* MUSIC PLAYER */
+        .music-player {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            border-radius: 50px;
+            padding: 15px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        .music-player button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .music-player button:hover {
+            transform: scale(1.1);
+        }
+
+        .music-info {
+            font-size: 0.9em;
+            color: #667eea;
+            min-width: 150px;
+        }
+
+        .music-info p {
+            margin: 2px 0;
+            font-weight: 600;
+        }
+
         /* PARTICLES & BALLOONS */
         .particles {
             position: fixed;
@@ -233,6 +279,69 @@
             font-size: 1em;
         }
 
+        /* PHOTO GALLERY */
+        .photo-gallery {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            aspect-ratio: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(102, 126, 234, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay i {
+            color: white;
+            font-size: 2.5em;
+        }
+
         /* WISHES SECTION */
         .wishes-container {
             max-width: 900px;
@@ -343,33 +452,6 @@
             box-shadow: 0 0 0 4px #764ba2;
         }
 
-        /* GALLERY */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .gallery-item {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            aspect-ratio: 1;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4em;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .gallery-item:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-
         /* MEMORIES SECTION */
         .memories-text {
             background: white;
@@ -399,6 +481,78 @@
         .footer p {
             font-size: 1.1em;
             margin: 10px 0;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-content img {
+            width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 35px;
+            top: 15px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #bbb;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            margin-top: -22px;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.3s ease;
+            border-radius: 3px;
+            background-color: rgba(0, 0, 0, 0.5);
+            user-select: none;
+        }
+
+        .next {
+            right: 0;
+        }
+
+        .prev {
+            left: 0;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
         }
 
         /* ANIMATIONS */
@@ -507,11 +661,39 @@
                 padding: 25px;
                 font-size: 1em;
             }
+
+            .music-player {
+                bottom: 20px;
+                right: 20px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .music-info {
+                min-width: auto;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="particles" id="particles"></div>
+
+    <!-- MUSIC PLAYER -->
+    <div class="music-player">
+        <button id="musicToggle" title="Toggle Music">
+            <i class="fas fa-music"></i>
+        </button>
+        <div class="music-info">
+            <p id="musicStatus">🎵 Music</p>
+            <p style="font-size: 0.8em;">Click to toggle</p>
+        </div>
+    </div>
+
+    <!-- Audio Element (using royalty-free music) -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
 
     <!-- HERO SECTION -->
     <section class="hero">
@@ -551,6 +733,26 @@
         </div>
     </section>
 
+    <!-- PHOTO GALLERY SECTION -->
+    <section class="section section-gradient">
+        <div class="section-title" style="color: #667eea;">📸 Our Beautiful Memories Together</div>
+        <div class="photo-gallery">
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Photos will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL FOR FULLSCREEN PHOTOS -->
+    <div id="photoModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <a class="prev" onclick="changePhoto(-1)">&#10094;</a>
+        <div class="modal-content">
+            <img id="modalImg" src="" alt="Memory">
+        </div>
+        <a class="next" onclick="changePhoto(1)">&#10095;</a>
+    </div>
+
     <!-- HEARTFELT MESSAGE SECTION -->
     <section class="section section-gradient">
         <div class="section-title" style="color: #667eea;">💝 A Message From My Heart</div>
@@ -565,7 +767,7 @@
                 Every moment we've shared, every laugh we've had, every time you've been there for me – all of it lives in my heart. This distance is temporary, but <em>our bond is forever</em>.
             </p>
             <p>
-                On your birthday, I want you to know how incredibly proud I am of you. <em>You've shown such strength and grace</em>, and I admire you more with each passing day. You deserve all the happiness in the world, and I'm sending it all your way from here.
+                On your birthday, I want you to know how incredibly proud I am of you. <em>You've shown such strength and grace</em>, and I admire you more with each passing day. You deserve all the happiness in the world, and I hope this birthday is just the beginning of an incredible year for you.
             </p>
             <p style="text-align: center; margin-top: 30px; font-size: 1.2em; color: #764ba2;">
                 <strong>Happy Birthday, my amazing sister! 🎉💕</strong>
@@ -612,16 +814,8 @@
 
     <!-- MEMORIES & MOMENTS SECTION -->
     <section class="section section-dark">
-        <div class="section-title">🎀 Our Beautiful Memories</div>
-        <div class="gallery-grid">
-            <div class="gallery-item">👭</div>
-            <div class="gallery-item">💕</div>
-            <div class="gallery-item">😂</div>
-            <div class="gallery-item">🤗</div>
-            <div class="gallery-item">✨</div>
-            <div class="gallery-item">❤️</div>
-        </div>
-        <div class="memories-text" style="background: rgba(255,255,255,0.9); margin-top: 50px;">
+        <div class="section-title">🎀 Our Sister Bond</div>
+        <div class="memories-text" style="background: rgba(255,255,255,0.9);">
             <p>
                 We may be thousands of miles apart, but our sisterhood knows no distance. Every memory we share is a treasure I hold close to my heart. From the silly moments to the deep conversations, from the times we've laughed together to the times we've supported each other through challenges - it all matters.
             </p>
@@ -698,7 +892,56 @@
     </footer>
 
     <script>
-        // Create floating balloons
+        // Photos array - all images from your repository
+        const photos = [
+            'IMG-20200125-WA0033.jpg',
+            'IMG-20210116-WA0000.jpg',
+            'IMG-20211223-WA0037.jpg',
+            'IMG-20211223-WA0039.jpg',
+            'IMG-20220130-WA0035.jpg',
+            'IMG-20220130-WA0036.jpg',
+            'IMG-20220201-WA0005.jpg',
+            'IMG-20220503-WA0097.jpg',
+            'IMG-20220618-WA0160.jpg',
+            'IMG-20220824-WA0003.jpg',
+            'IMG-20221103-WA0002.jpg',
+            'IMG-20230116-WA0007.jpg',
+            'IMG-20230116-WA0029.jpg',
+            'IMG-20230312-WA0067.jpg',
+            'IMG-20240729-WA0029.jpg',
+            'IMG-20240803-WA0019.jpg',
+            'IMG-20240803-WA0021.jpg',
+            'IMG-20250528-WA0008.jpg',
+            'IMG-20250608-WA0020.jpg',
+            'IMG-20250805-WA0056.jpg',
+            'IMG-20250812-WA0013.jpg',
+            'IMG-20250812-WA0018.jpg',
+            'IMG-20250812-WA0019.jpg',
+            'IMG-20260727-WA0001.jpg',
+            'IMG-20260727-WA0002.jpg',
+            'IMG-20260727-WA0003.jpg',
+            'IMG-20260802-WA0001.jpg',
+            'IMG-20260802-WA0002.jpg',
+            'IMG-20260802-WA0003.jpg',
+            'IMG-20260802-WA0004.jpg',
+            'IMG-20260802-WA0005.jpg',
+            'IMG-20260802-WA0006.jpg',
+            'IMG-20260802-WA0008.jpg',
+            'IMG-20260802-WA0011.jpg',
+            'IMG-20260802-WA0015.jpg',
+            'IMG-20260802-WA0016.jpg',
+            'IMG-20260802-WA0017.jpg',
+            'IMG_20211104_211057.jpg',
+            'IMG_20230929_215007_310.jpg',
+            'PXL_20230604_142627087.jpg',
+            'Snapchat-1587264563.jpg',
+            'Snapchat-277844970.jpg',
+            'Screenshot_20240406-155714.png'
+        ];
+
+        let currentPhotoIndex = 0;
+
+        // Create balloons
         function createBalloons() {
             const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#ff85c0', '#95e1d3', '#c7b3e5', '#ffa500', '#00d4ff'];
             const particlesContainer = document.getElementById('particles');
@@ -748,10 +991,73 @@
         `;
         document.head.appendChild(style);
 
-        // Initialize
+        // Populate gallery
+        function populateGallery() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            photos.forEach((photo, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.innerHTML = `
+                    <img src="${photo}" alt="Memory ${index + 1}" onclick="openModal(${index})">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                `;
+                galleryGrid.appendChild(item);
+            });
+        }
+
+        // Modal functions
+        function openModal(index) {
+            currentPhotoIndex = index;
+            document.getElementById('modalImg').src = photos[index];
+            document.getElementById('photoModal').style.display = 'block';
+        }
+
+        function changePhoto(n) {
+            currentPhotoIndex += n;
+            if (currentPhotoIndex >= photos.length) currentPhotoIndex = 0;
+            if (currentPhotoIndex < 0) currentPhotoIndex = photos.length - 1;
+            document.getElementById('modalImg').src = photos[currentPhotoIndex];
+        }
+
+        document.querySelector('.close-modal').onclick = function() {
+            document.getElementById('photoModal').style.display = 'none';
+        }
+
+        // Music player
+        const audio = document.getElementById('backgroundMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicStatus = document.getElementById('musicStatus');
+
+        musicToggle.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
+                musicStatus.textContent = '🎵 Playing...';
+            } else {
+                audio.pause();
+                musicToggle.innerHTML = '<i class="fas fa-play"></i>';
+                musicStatus.textContent = '🎵 Paused';
+            }
+        });
+
+        // Auto-play music on page load
         window.addEventListener('load', () => {
             createBalloons();
             createConfetti();
+            populateGallery();
+            
+            // Attempt to autoplay (may be blocked by browser)
+            audio.volume = 0.3;
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    // Autoplay blocked, user needs to click
+                    console.log('Autoplay blocked, click to play music');
+                });
+            }
+            
             setInterval(createConfetti, 5000);
         });
 
@@ -786,6 +1092,15 @@
             el.style.transform = 'translateY(20px)';
             el.style.transition = 'all 0.6s ease-out';
             observer.observe(el);
+        });
+
+        // Keyboard navigation for modal
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('photoModal').style.display === 'block') {
+                if (e.key === 'ArrowLeft') changePhoto(-1);
+                if (e.key === 'ArrowRight') changePhoto(1);
+                if (e.key === 'Escape') document.getElementById('photoModal').style.display = 'none';
+            }
         });
     </script>
 </body>
