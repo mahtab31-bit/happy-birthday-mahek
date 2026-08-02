@@ -246,6 +246,18 @@
     transition: transform 0.6s ease, filter 0.6s ease;
   }
   .gallery-item:hover img{ transform: scale(1.045); filter: saturate(1) contrast(1.02); }
+  .gallery-item img.img-missing{ display:none; }
+  .gallery-item .img-fallback{
+    display:none;
+    width:100%; height:100%;
+    align-items:center; justify-content:center;
+    flex-direction:column; gap:8px;
+    color: var(--rose);
+    background: linear-gradient(135deg, var(--paper), #e7ddd0);
+    font-size:0.78em; text-align:center; padding:10px;
+  }
+  .gallery-item.is-missing .img-fallback{ display:flex; }
+  .gallery-item .img-fallback i{ font-size:1.4em; }
   .gallery-overlay{
     position:absolute; inset:0;
     background: linear-gradient(180deg, transparent 55%, rgba(46,35,64,0.55));
@@ -331,32 +343,139 @@
   }
   .fact p{ font-size: 0.96em; }
 
-  /* ---------- TIMELINE ---------- */
+  /* ---------- TIMELINE (milestones either side of a center line) ---------- */
   .timeline{
-    max-width: 640px;
+    max-width: 800px;
     margin: 0 auto;
     position:relative;
-    padding-left: 30px;
-    border-left: 1px dashed rgba(250,246,241,0.3);
+    padding: 10px 0;
   }
-  .timeline-item{ padding-bottom: 50px; position:relative; }
-  .timeline-item:last-child{ padding-bottom:0; }
-  .timeline-item::before{
+  .timeline::before{
     content:'';
-    position:absolute; left:-35px; top:4px;
-    width:9px; height:9px; border-radius:50%;
-    background: var(--gold);
-    box-shadow: 0 0 0 4px rgba(201,166,107,0.18);
+    position:absolute;
+    left:50%;
+    top:0; bottom:0;
+    width:1px;
+    transform: translateX(-50%);
+    background: repeating-linear-gradient(180deg, var(--gold) 0 6px, transparent 6px 12px);
   }
+  .timeline-item{
+    width: 47%;
+    margin-bottom: 56px;
+    position:relative;
+  }
+  .timeline-item:last-child{ margin-bottom:0; }
+  .timeline-item:nth-child(odd){ margin-left:0; text-align:right; padding-right:34px; }
+  .timeline-item:nth-child(even){ margin-left:53%; text-align:left; padding-left:34px; }
+  .timeline-dot{
+    position:absolute; top:6px;
+    width:11px; height:11px; border-radius:50%;
+    background: var(--gold);
+    border: 3px solid var(--ivory);
+    box-shadow: 0 0 0 1px var(--paper-line);
+  }
+  .timeline-item:nth-child(odd) .timeline-dot{ right:-40px; }
+  .timeline-item:nth-child(even) .timeline-dot{ left:-40px; }
   .timeline-item .label{ color: var(--gold); }
   .timeline-item h4{
     font-family: var(--serif);
     font-weight:500;
-    font-size: 1.25em;
-    color: var(--ivory);
+    font-size: 1.3em;
+    color: var(--ink);
     margin: 8px 0 6px;
   }
-  .timeline-item p{ color: rgba(250,246,241,0.72); font-size:0.98em; }
+  .timeline-item p{ font-size:0.98em; }
+
+  @media (max-width: 680px){
+    .timeline::before{ left:6px; }
+    .timeline-item, .timeline-item:nth-child(odd), .timeline-item:nth-child(even){
+      width:100%; margin-left:0; text-align:left; padding-left:34px; padding-right:0;
+    }
+    .timeline-item:nth-child(odd) .timeline-dot, .timeline-item:nth-child(even) .timeline-dot{
+      left:0; right:auto;
+    }
+  }
+
+  /* ---------- MAKE A WISH (interactive) ---------- */
+  .wish-widget{
+    max-width: 480px;
+    margin: 0 auto;
+    text-align:center;
+  }
+  .candle-stage{
+    position:relative;
+    width: 140px;
+    margin: 0 auto 30px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .candle-stage svg{ width:100%; height:auto; display:block; }
+  .flame{ transform-origin: 70px 46px; animation: flicker 1.6s ease-in-out infinite; transition: opacity 0.4s ease, transform 0.4s ease; }
+  @keyframes flicker{
+    0%,100%{ transform: scaleY(1) rotate(-1deg); }
+    50%{ transform: scaleY(1.08) rotate(1.5deg); }
+  }
+  .candle-stage.blown .flame{ opacity:0; transform: scaleY(0.2); }
+  .smoke{ opacity:0; }
+  .candle-stage.blown .smoke{ animation: smokeRise 1.6s ease-out forwards; }
+  @keyframes smokeRise{
+    0%{ opacity:0.5; transform: translateY(0) scale(1); }
+    100%{ opacity:0; transform: translateY(-26px) scale(1.6); }
+  }
+  .candle-hint{
+    font-size: 0.8em;
+    color: var(--rose);
+    letter-spacing: 0.04em;
+  }
+  .wish-form{
+    margin-top: 26px;
+    opacity:0; max-height:0; overflow:hidden;
+    transition: opacity 0.6s ease;
+  }
+  .wish-form.show{ opacity:1; max-height:600px; }
+  .wish-form textarea{
+    width:100%;
+    min-height: 90px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.05em;
+    color: var(--ink);
+    background: var(--ivory);
+    border: 1px solid var(--paper-line);
+    border-radius: 8px;
+    padding: 16px;
+    resize: vertical;
+  }
+  .wish-form button{
+    margin-top: 14px;
+    padding: 11px 26px;
+    background: var(--ink);
+    color: var(--ivory);
+    border:none;
+    border-radius: 999px;
+    font-size: 0.82em;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor:pointer;
+    transition: transform 0.3s ease;
+  }
+  .wish-form button:hover{ transform: translateY(-2px); }
+  .wish-sealed{
+    margin-top: 26px;
+    display:none;
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink);
+  }
+  .wish-sealed.show{ display:block; }
+  .envelope{
+    width: 90px; margin: 0 auto 14px;
+    animation: dropIn 0.6s ease-out;
+  }
+  @keyframes dropIn{
+    from{ opacity:0; transform: translateY(-14px) scale(0.9); }
+    to{ opacity:1; transform: translateY(0) scale(1); }
+  }
 
   /* ---------- CLOSING ---------- */
   .closing{ max-width: 640px; margin: 0 auto; text-align:center; }
@@ -379,6 +498,58 @@
   footer .thread{ opacity:0.7; }
   footer p{ font-size:0.88em; margin-top:6px; letter-spacing:0.02em; }
   footer p.main{ color: rgba(250,246,241,0.85); font-family: var(--serif); font-style:italic; font-size:1.05em; }
+
+  /* ---------- MUSIC TOGGLE ---------- */
+  .music-toggle{
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 200;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding: 12px 18px;
+    background: var(--ink);
+    color: var(--ivory);
+    border: none;
+    border-radius: 999px;
+    cursor:pointer;
+    font-family: var(--sans);
+    font-size: 0.8em;
+    letter-spacing: 0.04em;
+    box-shadow: 0 10px 26px rgba(46,35,64,0.28);
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+  .music-toggle:hover{ transform: translateY(-3px); }
+  .music-toggle .bars{ display:flex; align-items:flex-end; gap:2px; height:12px; }
+  .music-toggle .bars span{
+    width:3px; background: var(--gold); border-radius:2px;
+    animation: barBounce 0.9s ease-in-out infinite;
+    height: 4px;
+  }
+  .music-toggle .bars span:nth-child(2){ animation-delay:0.15s; }
+  .music-toggle .bars span:nth-child(3){ animation-delay:0.3s; }
+  .music-toggle.playing .bars span{ animation-play-state: running; }
+  .music-toggle:not(.playing) .bars span{ animation-play-state: paused; height:4px; }
+  @keyframes barBounce{
+    0%,100%{ height:4px; } 50%{ height:12px; }
+  }
+  .music-note{
+    position: fixed;
+    right: 22px;
+    bottom: 76px;
+    z-index: 200;
+    max-width: 230px;
+    background: var(--ivory);
+    border: 1px solid var(--paper-line);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 0.78em;
+    color: var(--ink-soft);
+    box-shadow: 0 10px 26px rgba(46,35,64,0.15);
+    display:none;
+  }
+  .music-note.show{ display:block; }
 
   @media (max-width:640px){
     .letter{ padding: 44px 26px; }
@@ -487,6 +658,51 @@
   </div>
 </section>
 
+<!-- MAKE A WISH (interactive) -->
+<section class="section section-paper">
+  <div class="section-head reveal">
+    <span class="label">Your turn</span>
+    <h2>Make a Wish</h2>
+    <p>Blow out the candle, then tell me what you wished for.</p>
+  </div>
+  <div class="wish-widget reveal">
+    <div class="candle-stage" id="candleStage" role="button" tabindex="0" aria-label="Blow out the candle to make a wish">
+      <svg viewBox="0 0 140 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="70" cy="158" rx="46" ry="8" fill="var(--paper-line)"/>
+        <rect x="52" y="70" width="36" height="86" rx="4" fill="var(--ivory)" stroke="var(--paper-line)"/>
+        <rect x="52" y="70" width="36" height="86" rx="4" fill="url(#stripe)" opacity="0.5"/>
+        <defs>
+          <pattern id="stripe" width="10" height="10" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+            <rect width="5" height="10" fill="var(--rose)" opacity="0.35"/>
+          </pattern>
+        </defs>
+        <rect x="66" y="52" width="8" height="20" fill="#E4D5C3"/>
+        <g class="smoke">
+          <path d="M70,46 C66,40 74,36 70,30" stroke="rgba(74,68,88,0.4)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+        <path class="flame" d="M70,52 C63,44 63,34 70,24 C77,34 77,44 70,52 Z" fill="var(--gold)"/>
+        <path class="flame" d="M70,48 C66,43 66,37 70,31 C74,37 74,43 70,48 Z" fill="var(--rose)" opacity="0.85"/>
+      </svg>
+    </div>
+    <p class="candle-hint" id="candleHint">Tap the flame to blow it out</p>
+
+    <div class="wish-form" id="wishForm">
+      <textarea id="wishText" placeholder="Write your wish here, Mahek…" maxlength="200"></textarea>
+      <br>
+      <button id="sealWish">Seal it with love</button>
+    </div>
+
+    <div class="wish-sealed" id="wishSealed">
+      <svg class="envelope" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="96" height="66" rx="3" fill="var(--ivory)" stroke="var(--gold)" stroke-width="1.5"/>
+        <path d="M4,4 L50,42 L96,4" fill="none" stroke="var(--gold)" stroke-width="1.5"/>
+        <circle cx="50" cy="35" r="7" fill="var(--rose)"/>
+      </svg>
+      <p>Your wish is sealed and sent — carried along the thread, from Canada back to India. 🤍</p>
+    </div>
+  </div>
+</section>
+
 <!-- SISTER BOND -->
 <section class="section section-ink">
   <div class="section-head reveal">
@@ -501,28 +717,32 @@
 </section>
 
 <!-- TIMELINE -->
-<section class="section section-ink">
+<section class="section section-ivory">
   <div class="section-head reveal">
-    <span class="label" style="color:var(--gold);">The journey so far</span>
+    <span class="label">The journey so far</span>
     <h2>Our Sister Story</h2>
   </div>
   <div class="timeline reveal">
     <div class="timeline-item">
+      <span class="timeline-dot"></span>
       <span class="label">Then</span>
       <h4>You came into my life</h4>
       <p>The day you were born, my world became a little more complete.</p>
     </div>
     <div class="timeline-item">
+      <span class="timeline-dot"></span>
       <span class="label">Growing up</span>
       <h4>Side by side</h4>
       <p>Secrets, laughter, and the kind of memories that don't fade.</p>
     </div>
     <div class="timeline-item">
+      <span class="timeline-dot"></span>
       <span class="label">Through it all</span>
       <h4>Showing up for each other</h4>
       <p>Thick or thin, we've never once let go.</p>
     </div>
     <div class="timeline-item">
+      <span class="timeline-dot"></span>
       <span class="label">Now</span>
       <h4>Miles apart, closer than ever</h4>
       <p>The distance changed the view, not the bond. Today, I celebrate you.</p>
@@ -555,6 +775,17 @@
   <p>Made with love, sister to sister</p>
 </footer>
 
+<audio id="bdayMusic" loop preload="none">
+  <source src="birthday-music.mp3" type="audio/mpeg">
+</audio>
+<button class="music-toggle" id="musicToggle" aria-label="Play birthday music">
+  <span class="bars"><span></span><span></span><span></span></span>
+  <span id="musicLabel">Play music</span>
+</button>
+<div class="music-note" id="musicNote">
+  Add a file named <strong>birthday-music.mp3</strong> to the repo (same folder as index.html) to enable this — any soft instrumental track works.
+</div>
+
 <script>
   const photos = [
     'IMG-20200125-WA0033.jpg','IMG-20210116-WA0000.jpg','IMG-20211223-WA0037.jpg',
@@ -582,7 +813,9 @@
       const item = document.createElement('div');
       item.className = 'gallery-item';
       item.innerHTML = `
-        <img src="${photo}" alt="Memory ${i+1}" loading="lazy" onclick="openModal(${i})">
+        <img src="${photo}" alt="Memory ${i+1}" loading="lazy" onclick="openModal(${i})"
+             onerror="this.classList.add('img-missing'); this.closest('.gallery-item').classList.add('is-missing');">
+        <div class="img-fallback"><i class="fa-solid fa-image"></i><span>${photo}</span></div>
         <div class="gallery-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
       `;
       grid.appendChild(item);
@@ -648,6 +881,63 @@
       const t = document.querySelector(this.getAttribute('href'));
       if (t) t.scrollIntoView({ behavior: 'smooth' });
     });
+  });
+
+  // ---------- MUSIC TOGGLE ----------
+  const music = document.getElementById('bdayMusic');
+  const musicBtn = document.getElementById('musicToggle');
+  const musicLabel = document.getElementById('musicLabel');
+  const musicNote = document.getElementById('musicNote');
+  let musicMissingWarned = false;
+
+  musicBtn.addEventListener('click', () => {
+    if (music.paused){
+      music.play().then(() => {
+        musicBtn.classList.add('playing');
+        musicLabel.textContent = 'Pause music';
+        musicNote.classList.remove('show');
+      }).catch(() => {
+        if (!musicMissingWarned){
+          musicNote.classList.add('show');
+          musicMissingWarned = true;
+        }
+      });
+    } else {
+      music.pause();
+      musicBtn.classList.remove('playing');
+      musicLabel.textContent = 'Play music';
+    }
+  });
+
+  // ---------- MAKE A WISH ----------
+  const candleStage = document.getElementById('candleStage');
+  const candleHint = document.getElementById('candleHint');
+  const wishForm = document.getElementById('wishForm');
+  const wishText = document.getElementById('wishText');
+  const sealWish = document.getElementById('sealWish');
+  const wishSealed = document.getElementById('wishSealed');
+
+  function blowCandle(){
+    if (candleStage.classList.contains('blown')) return;
+    candleStage.classList.add('blown');
+    candleHint.textContent = 'Made a wish — now write it below';
+    setTimeout(() => {
+      wishForm.classList.add('show');
+      wishText.focus();
+    }, 500);
+  }
+  candleStage.addEventListener('click', blowCandle);
+  candleStage.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); blowCandle(); }
+  });
+
+  sealWish.addEventListener('click', () => {
+    wishForm.classList.remove('show');
+    wishSealed.classList.add('show');
+    if (wishText.value.trim()){
+      const p = wishSealed.querySelector('p');
+      p.textContent = `"${wishText.value.trim()}" — sealed and sent, carried along the thread. 🤍`;
+    }
   });
 </script>
 </body>
