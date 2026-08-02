@@ -1208,47 +1208,54 @@
     }
   }
   const beginBtn = document.getElementById('beginBtn');
+
+  // ---------- MUSIC: unlocked by the "Begin" click (a real gesture browsers honor), ----------
+  // ---------- then faded up in volume once she scrolls to the memories section ----------
+  const music = document.getElementById('bdayMusic');
+  const musicCue = document.getElementById('musicCue');
+  const TARGET_VOLUME = 0.35;
+  music.volume = 0;
+  let musicUnlocked = false;
+  let musicFadedIn = false;
+
+  function unlockMusic(){
+    if (musicUnlocked) return;
+    music.play().then(() => { musicUnlocked = true; }).catch(() => {});
+  }
+
+  function fadeInMusic(){
+    if (musicFadedIn) return;
+    musicFadedIn = true;
+    // in case it never got unlocked earlier (e.g. she scrolled without clicking Begin),
+    // this doubles as a second attempt, using whatever gesture got us here
+    music.play().catch(() => {});
+    let v = music.volume;
+    const step = () => {
+      v = Math.min(TARGET_VOLUME, v + 0.02);
+      music.volume = v;
+      if (v < TARGET_VOLUME) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+    musicCue.classList.add('show');
+    setTimeout(() => musicCue.classList.remove('show'), 4000);
+  }
+
+  // any real interaction can unlock playback — covers people who don't click Begin
+  ['click', 'touchstart', 'keydown'].forEach(evt => {
+    window.addEventListener(evt, unlockMusic, { once: true });
+  });
+
   beginBtn.addEventListener('click', () => {
     const r = beginBtn.getBoundingClientRect();
     confettiBurst(r.left + r.width / 2, r.top + r.height / 2);
+    unlockMusic();
   });
-
-  // ---------- MUSIC: starts softly once she scrolls into the memories section ----------
-  const music = document.getElementById('bdayMusic');
-  const musicCue = document.getElementById('musicCue');
-  music.volume = 0.35;
-  let musicStarted = false;
-
-
-  function tryStartMusic(){
-    if (musicStarted) return;
-    music.play().then(() => {
-      musicStarted = true;
-      musicCue.classList.add('show');
-      setTimeout(() => musicCue.classList.remove('show'), 4000);
-    }).catch(() => {
-      // autoplay blocked — retry on the next real interaction, silently
-      const retry = () => {
-        music.play().then(() => {
-          musicStarted = true;
-          musicCue.classList.add('show');
-          setTimeout(() => musicCue.classList.remove('show'), 4000);
-        }).catch(() => {});
-        window.removeEventListener('click', retry);
-        window.removeEventListener('touchstart', retry);
-        window.removeEventListener('keydown', retry);
-      };
-      window.addEventListener('click', retry, { once:true });
-      window.addEventListener('touchstart', retry, { once:true });
-      window.addEventListener('keydown', retry, { once:true });
-    });
-  }
 
   const gallerySection = document.getElementById('galleryGrid').closest('section');
   const musicIO = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting){
-        tryStartMusic();
+        fadeInMusic();
         musicIO.disconnect();
       }
     });
