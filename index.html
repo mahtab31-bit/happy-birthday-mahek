@@ -168,6 +168,19 @@
     to{ transform: translateY(110vh) rotate(200deg); opacity:0; }
   }
 
+  .confetti-bit{
+    position:fixed;
+    pointer-events:none;
+    z-index: 999;
+    animation: confettiBurst ease-out forwards;
+  }
+  @keyframes confettiBurst{
+    to{
+      transform: translate(var(--dx), calc(var(--dy) + 90px)) rotate(var(--rot));
+      opacity:0;
+    }
+  }
+
   /* ---------- SECTION SCAFFOLD ---------- */
   .section{ padding: 110px 24px; position:relative; }
   .section-ivory{ background: var(--ivory); }
@@ -282,18 +295,12 @@
     position:absolute; inset:0;
     background: linear-gradient(180deg, transparent 55%, rgba(46,35,64,0.6));
     opacity:0; transition: opacity 0.35s ease;
-    display:flex; align-items:flex-end; justify-content:space-between;
+    display:flex; align-items:flex-end; justify-content:center;
     padding:12px 14px;
     pointer-events:none;
   }
   .gallery-item:hover .gallery-overlay{ opacity:1; }
-  .gallery-overlay i{ color: var(--ivory); font-size:1em; }
-  .gallery-overlay .frame-num{
-    color: rgba(250,246,241,0.85);
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 0.95em;
-  }
+  .gallery-overlay i{ color: var(--ivory); font-size:1.1em; }
 
   /* ---------- MODAL ---------- */
   .modal{
@@ -347,29 +354,35 @@
   }
 
   /* ---------- TRUTHS (masonry, progressively loaded) ---------- */
-  .truths-grid{
-    column-count: 3;
-    column-gap: 22px;
+  .truths-carousel-wrap{
     max-width: 1100px;
     margin: 0 auto;
+    display:flex;
+    align-items:center;
+    gap: 14px;
   }
-  @media (max-width: 900px){ .truths-grid{ column-count: 2; } }
-  @media (max-width: 600px){ .truths-grid{ column-count: 1; } }
+  .truths-track{
+    display:flex;
+    gap: 22px;
+    overflow-x:auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 4px 2px 10px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .truths-track::-webkit-scrollbar{ display:none; }
 
   .fact{
-    break-inside: avoid;
+    flex: 0 0 calc(33.333% - 15px);
+    scroll-snap-align: start;
     background: var(--ivory);
     border: 1px solid var(--paper-line);
     border-radius: 6px;
     padding: 34px 28px;
-    margin-bottom: 22px;
-    opacity:0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
-  .fact.in-view{ opacity:1; transform: translateY(0); }
   .fact:hover{ border-color: var(--gold); box-shadow: 0 12px 28px rgba(46,35,64,0.08); }
-  .fact .label{ display:block; margin-bottom:16px; }
   .fact h3{
     font-family: var(--serif);
     font-weight:500;
@@ -379,19 +392,22 @@
   }
   .fact p{ font-size: 0.96em; }
 
-  .truths-sentinel{ height: 4px; }
-  .truths-close{
-    break-inside: avoid;
-    text-align:center;
-    padding: 30px 10px 0;
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 1.15em;
-    color: var(--rose);
-    opacity:0;
-    transition: opacity 0.8s ease;
+  @media (max-width: 900px){ .fact{ flex: 0 0 calc(50% - 11px); } }
+  @media (max-width: 600px){ .fact{ flex: 0 0 84%; } }
+
+  .truth-nav{
+    flex: 0 0 auto;
+    width: 40px; height:40px;
+    border-radius: 50%;
+    border: 1px solid var(--paper-line);
+    background: var(--ivory);
+    color: var(--ink);
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: all 0.3s ease;
   }
-  .truths-close.in-view{ opacity:1; }
+  .truth-nav:hover{ background: var(--ink); color: var(--ivory); border-color: var(--ink); }
+  @media (max-width: 600px){ .truth-nav{ width:34px; height:34px; } }
 
   /* ---------- TIMELINE (milestones either side of a center line) ---------- */
   .timeline{
@@ -607,7 +623,7 @@
     <span class="pin">Canada</span>
   </div>
 
-  <a href="#wishes" class="cta">Begin <i class="fa-solid fa-arrow-down" style="font-size:0.8em;"></i></a>
+  <a href="#wishes" class="cta" id="beginBtn">Begin <i class="fa-solid fa-arrow-down" style="font-size:0.8em;"></i></a>
 </section>
 
 <!-- WISHES -->
@@ -679,11 +695,13 @@
   <div class="section-head reveal">
     <span class="label">A few truths</span>
     <h2>About You</h2>
-    <p>Keep scrolling — there's more where that came from.</p>
+    <p>Scroll through — there's plenty more where that came from.</p>
   </div>
-  <div class="truths-grid" id="truthsGrid"></div>
-  <div class="truths-sentinel" id="truthsSentinel"></div>
-  <div class="truths-close" id="truthsClose">...and that's not even all of it. Happy birthday, your highness. 👑</div>
+  <div class="truths-carousel-wrap reveal">
+    <button class="truth-nav prev" id="truthPrev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+    <div class="truths-track" id="truthsTrack"></div>
+    <button class="truth-nav next" id="truthNext" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
 </section>
 
 <!-- MAKE A WISH (interactive) -->
@@ -843,7 +861,6 @@
              onerror="this.classList.add('img-missing'); this.closest('.gallery-item').classList.add('is-missing');">
         <div class="img-fallback"><i class="fa-solid fa-image"></i><span>${photo}</span></div>
         <div class="gallery-overlay">
-          <span class="frame-num">${String(i+1).padStart(2,'0')}</span>
           <i class="fa-solid fa-magnifying-glass-plus"></i>
         </div>
       `;
@@ -939,63 +956,64 @@
     { title:'The whole package', text:'Beauty, brains, heart — take your pick. You have all three.' },
     { title:'Simply extraordinary', text:"Which, frankly, we've been saying since day one." }
   ];
-  const TRUTHS_BATCH = 6;
-  let truthsShown = 0;
-  const truthsGrid = document.getElementById('truthsGrid');
-  const truthsSentinel = document.getElementById('truthsSentinel');
-  const truthsClose = document.getElementById('truthsClose');
 
-  const truthsCardIO = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting){
-        entry.target.classList.add('in-view');
-        truthsCardIO.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  function initTruthsCarousel(){
+    const track = document.getElementById('truthsTrack');
+    const prevBtn = document.getElementById('truthPrev');
+    const nextBtn = document.getElementById('truthNext');
 
-  function loadMoreTruths(){
-    const next = truths.slice(truthsShown, truthsShown + TRUTHS_BATCH);
-    next.forEach((t, i) => {
+    const makeCard = (t) => {
       const card = document.createElement('div');
       card.className = 'fact';
-      card.style.transitionDelay = `${i * 70}ms`;
-      card.innerHTML = `
-        <span class="label">${String(truthsShown + i + 1).padStart(2,'0')}</span>
-        <h3>${t.title}</h3>
-        <p>${t.text}</p>
-      `;
-      truthsGrid.appendChild(card);
-      truthsCardIO.observe(card);
-    });
-    truthsShown += next.length;
+      card.innerHTML = `<h3>${t.title}</h3><p>${t.text}</p>`;
+      return card;
+    };
 
-    if (truthsShown >= truths.length){
-      truthsSentinelIO.disconnect();
-      truthsCloseIO.observe(truthsClose);
+    // real cards, then a few clones appended at the end so it can loop seamlessly
+    truths.forEach(t => track.appendChild(makeCard(t)));
+    truths.slice(0, 3).forEach(t => track.appendChild(makeCard(t)));
+
+    let cardStep = 0;
+    let realWidth = 0;
+    function measure(){
+      const first = track.children[0];
+      const style = getComputedStyle(track);
+      const gap = parseFloat(style.columnGap || style.gap || '22');
+      cardStep = first.getBoundingClientRect().width + gap;
+      realWidth = cardStep * truths.length;
     }
-  }
+    measure();
+    window.addEventListener('resize', measure);
 
-  const truthsSentinelIO = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && truthsShown < truths.length){
-        loadMoreTruths();
+    // once scrolled past the real set into the cloned tail, snap invisibly back to the start
+    let ticking = false;
+    track.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (track.scrollLeft >= realWidth - 2){
+          track.scrollLeft -= realWidth;
+        }
+        ticking = false;
+      });
+    });
+
+    // vertical mouse-wheel over the carousel moves it horizontally
+    track.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+        e.preventDefault();
+        track.scrollLeft += e.deltaY;
       }
-    });
-  }, { threshold: 0, rootMargin: '0px 0px 200px 0px' });
+    }, { passive: false });
 
-  const truthsCloseIO = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('in-view');
+    prevBtn.addEventListener('click', () => {
+      if (track.scrollLeft < cardStep){ track.scrollLeft += realWidth; }
+      track.scrollBy({ left: -cardStep, behavior: 'smooth' });
     });
-  }, { threshold: 0.3 });
-
-  window.addEventListener('load', () => {
-    populateGallery();
-    setTimeout(fallPetals, 400);
-    loadMoreTruths();
-    truthsSentinelIO.observe(truthsSentinel);
-  });
+    nextBtn.addEventListener('click', () => {
+      track.scrollBy({ left: cardStep, behavior: 'smooth' });
+    });
+  }
 
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', function(e){
@@ -1005,11 +1023,47 @@
     });
   });
 
+  window.addEventListener('load', () => {
+    populateGallery();
+    setTimeout(fallPetals, 400);
+    initTruthsCarousel();
+  });
+
+  // ---------- CONFETTI on "Begin" ----------
+  function confettiBurst(x, y){
+    const colors = ['#B76E79', '#C9A66B', '#4A4458', '#E4D5C3'];
+    for (let i = 0; i < 26; i++){
+      const bit = document.createElement('div');
+      bit.className = 'confetti-bit';
+      const size = 5 + Math.random() * 5;
+      bit.style.left = x + 'px';
+      bit.style.top = y + 'px';
+      bit.style.width = size + 'px';
+      bit.style.height = size + 'px';
+      bit.style.background = colors[Math.floor(Math.random() * colors.length)];
+      bit.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 60 + Math.random() * 110;
+      bit.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+      bit.style.setProperty('--dy', Math.sin(angle) * dist - 50 + 'px');
+      bit.style.setProperty('--rot', Math.floor(Math.random() * 480 - 240) + 'deg');
+      bit.style.animationDuration = (0.8 + Math.random() * 0.5) + 's';
+      document.body.appendChild(bit);
+      setTimeout(() => bit.remove(), 1500);
+    }
+  }
+  const beginBtn = document.getElementById('beginBtn');
+  beginBtn.addEventListener('click', () => {
+    const r = beginBtn.getBoundingClientRect();
+    confettiBurst(r.left + r.width / 2, r.top + r.height / 2);
+  });
+
   // ---------- MUSIC: starts softly once she scrolls into the memories section ----------
   const music = document.getElementById('bdayMusic');
   const musicCue = document.getElementById('musicCue');
   music.volume = 0.35;
   let musicStarted = false;
+
 
   function tryStartMusic(){
     if (musicStarted) return;
