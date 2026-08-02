@@ -353,6 +353,64 @@
     text-align:right;
   }
 
+  /* ---------- LIFESIZE HUG (3-panel journey) ---------- */
+  .hug-journey{
+    position: relative;
+    background: var(--ivory);
+    padding: 20px 24px 40px;
+  }
+  .hug-thread{
+    position:absolute;
+    left:50%;
+    top:60px; bottom:60px;
+    width:1px;
+    transform: translateX(-50%);
+    background: repeating-linear-gradient(180deg, var(--paper-line) 0 6px, transparent 6px 14px);
+    z-index:0;
+  }
+  .hug-panel{
+    position:relative;
+    z-index:1;
+    min-height: 62vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 40px 20px;
+  }
+  .hug-svg{
+    width: min(360px, 80vw);
+    height:auto;
+    margin-bottom: 26px;
+  }
+  .hug-panel .label{ margin-bottom: 12px; }
+  .hug-line{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.2em, 3vw, 1.7em);
+    color: var(--ink);
+    max-width: 460px;
+  }
+  .hug-panel-final{
+    background: radial-gradient(ellipse at 50% 50%, rgba(201,166,107,0.14), transparent 70%);
+    border-radius: 18px;
+  }
+  .hug-line-final{
+    font-size: clamp(1.5em, 4vw, 2.2em);
+    color: var(--rose);
+  }
+  .hug-sub{
+    margin-top: 14px;
+    font-size: 0.85em;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+  @media (max-width:640px){
+    .hug-panel{ min-height: 52vh; }
+  }
+
   /* ---------- TRUTHS (masonry, progressively loaded) ---------- */
   .truths-carousel-wrap{
     max-width: 1100px;
@@ -687,6 +745,46 @@
     <p>Every laugh we've shared, every time you've shown up for me — all of it lives in my heart. This distance is temporary. Our bond isn't.</p>
     <p>I want you to know how proud I am of you — of the strength and grace you carry so naturally. You deserve every bit of happiness this year has to offer, and I hope today is only the beginning of it.</p>
     <p class="sign-off">Happy birthday, my amazing sister. 🤍</p>
+  </div>
+</section>
+
+<!-- LIFESIZE HUG -->
+<section class="hug-journey">
+  <div class="hug-thread" aria-hidden="true"></div>
+
+  <div class="hug-panel reveal">
+    <svg viewBox="0 0 400 260" class="hug-svg">
+      <path d="M 50 20 Q 5 130 50 240" fill="none" stroke="var(--rose)" stroke-width="20" stroke-linecap="round"/>
+      <path d="M 350 20 Q 395 130 350 240" fill="none" stroke="var(--gold)" stroke-width="20" stroke-linecap="round"/>
+    </svg>
+    <span class="label">The distance</span>
+    <p class="hug-line">I couldn't be there with you in person today.</p>
+  </div>
+
+  <div class="hug-panel reveal">
+    <svg viewBox="0 0 400 260" class="hug-svg">
+      <path d="M 150 20 Q 95 130 150 240" fill="none" stroke="var(--rose)" stroke-width="20" stroke-linecap="round"/>
+      <path d="M 250 20 Q 305 130 250 240" fill="none" stroke="var(--gold)" stroke-width="20" stroke-linecap="round"/>
+    </svg>
+    <span class="label">Reaching across it</span>
+    <p class="hug-line">So here's the next best thing I could send you.</p>
+  </div>
+
+  <div class="hug-panel hug-panel-final reveal">
+    <svg viewBox="0 0 400 260" class="hug-svg">
+      <defs>
+        <radialGradient id="hugGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="var(--gold)" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="var(--gold)" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="200" cy="130" r="70" fill="url(#hugGlow)"/>
+      <path d="M 185 20 Q 120 130 185 240" fill="none" stroke="var(--rose)" stroke-width="20" stroke-linecap="round"/>
+      <path d="M 215 20 Q 280 130 215 240" fill="none" stroke="var(--gold)" stroke-width="20" stroke-linecap="round"/>
+    </svg>
+    <span class="label">Delivered, right on time</span>
+    <p class="hug-line hug-line-final">Consider yourself hugged. Tightly. 🤍</p>
+    <p class="hug-sub">Lifesize, sent from India — however far it had to travel.</p>
   </div>
 </section>
 
