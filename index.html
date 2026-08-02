@@ -24,52 +24,6 @@
             color: #333;
         }
 
-        /* MUSIC PLAYER */
-        .music-player {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: white;
-            border-radius: 50px;
-            padding: 15px 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            animation: slideInUp 0.5s ease-out;
-        }
-
-        .music-player button {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2em;
-            transition: all 0.3s ease;
-        }
-
-        .music-player button:hover {
-            transform: scale(1.1);
-        }
-
-        .music-info {
-            font-size: 0.9em;
-            color: #667eea;
-            min-width: 150px;
-        }
-
-        .music-info p {
-            margin: 2px 0;
-            font-weight: 600;
-        }
-
         /* PARTICLES & BALLOONS */
         .particles {
             position: fixed;
@@ -661,38 +615,15 @@
                 padding: 25px;
                 font-size: 1em;
             }
-
-            .music-player {
-                bottom: 20px;
-                right: 20px;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .music-info {
-                min-width: auto;
-                text-align: center;
-            }
         }
     </style>
 </head>
 <body>
     <div class="particles" id="particles"></div>
 
-    <!-- MUSIC PLAYER -->
-    <div class="music-player">
-        <button id="musicToggle" title="Toggle Music">
-            <i class="fas fa-music"></i>
-        </button>
-        <div class="music-info">
-            <p id="musicStatus">🎵 Music</p>
-            <p style="font-size: 0.8em;">Click to toggle</p>
-        </div>
-    </div>
-
-    <!-- Audio Element (using royalty-free music) -->
-    <audio id="backgroundMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    <!-- Audio Element - Soft Birthday Music (playing silently in background) -->
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAA==" type="audio/wav">
     </audio>
 
     <!-- HERO SECTION -->
@@ -1025,38 +956,18 @@
             document.getElementById('photoModal').style.display = 'none';
         }
 
-        // Music player
-        const audio = document.getElementById('backgroundMusic');
-        const musicToggle = document.getElementById('musicToggle');
-        const musicStatus = document.getElementById('musicStatus');
-
-        musicToggle.addEventListener('click', () => {
-            if (audio.paused) {
-                audio.play();
-                musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
-                musicStatus.textContent = '🎵 Playing...';
-            } else {
-                audio.pause();
-                musicToggle.innerHTML = '<i class="fas fa-play"></i>';
-                musicStatus.textContent = '🎵 Paused';
-            }
-        });
-
-        // Auto-play music on page load
+        // Initialize
         window.addEventListener('load', () => {
             createBalloons();
             createConfetti();
             populateGallery();
             
-            // Attempt to autoplay (may be blocked by browser)
-            audio.volume = 0.3;
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    // Autoplay blocked, user needs to click
-                    console.log('Autoplay blocked, click to play music');
-                });
-            }
+            // Soft birthday music plays silently in background
+            const audio = document.getElementById('backgroundMusic');
+            audio.volume = 0.15; // Very soft background volume
+            audio.play().catch(() => {
+                // Autoplay may be blocked, that's okay
+            });
             
             setInterval(createConfetti, 5000);
         });
